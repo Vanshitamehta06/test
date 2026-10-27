@@ -1,0 +1,26 @@
+name: Docker
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t page-for-password-reset-login:${{ github.sha }} .
+      - name: Run container
+        run: docker run -d --name app -p 8000:8000 page-for-password-reset-login:${{ github.sha }}
+      - name: Check the running container
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8000/health > /dev/null; then echo "Container is healthy"; exit 0; fi
+            sleep 2
+          done
+          echo "Container did not become healthy"; exit 1
+      - name: Container logs
+        if: always()
+        run: docker logs app || true
