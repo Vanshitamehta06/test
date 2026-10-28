@@ -1,0 +1,7 @@
+services:
+  password-reset-page:
+    build: .
+    image: password-reset-page:local
+    ports:
+      - "8129:8000"
+    restart: unless-stopped
