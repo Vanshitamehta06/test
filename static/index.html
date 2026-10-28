@@ -3,23 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Page For Password Reset — Sign in</title>
+  <title>Password Reset</title>
   <link rel="stylesheet" href="/static/styles.css" />
 </head>
-<body>
+<body data-start-mode="reset">
   <main class="shell">
     <section class="brand">
       <div class="logo" aria-hidden="true">P</div>
-      <h1>Page For Password Reset</h1>
-      <p>Sign in to continue.</p>
+      <h1>Password Reset</h1>
+      <p id="brand-subtitle">Reset your password.</p>
     </section>
 
     <section class="panel">
       <div class="tabs" role="tablist">
-        <button type="button" class="tab active" data-mode="login" role="tab" aria-selected="true">Sign in</button>
-        <button type="button" class="tab" data-mode="register" role="tab" aria-selected="false">Create account</button>
+        <button type="button" class="tab" data-mode="login" role="tab">Sign in</button>
+        <button type="button" class="tab" data-mode="register" role="tab">Create account</button>
       </div>
 
+      <!-- Sign in / create account -->
       <form id="auth-form" novalidate>
         <label for="email">Email</label>
         <input id="email" name="email" type="email" autocomplete="email" required />
@@ -28,13 +29,49 @@
         <label for="password">Password</label>
         <div class="password-row">
           <input id="password" name="password" type="password" autocomplete="current-password" minlength="8" required />
-          <button type="button" id="toggle-password" aria-label="Show password">Show</button>
+          <button type="button" class="toggle" data-target="password" aria-label="Show password">Show</button>
         </div>
         <p class="field-error" data-for="password"></p>
+        <button type="button" class="link" id="forgot-link">Forgot password?</button>
 
-        <button type="submit" id="submit">Sign in</button>
-        <p id="message" role="status"></p>
+        <button type="submit" class="primary" id="submit">Sign in</button>
       </form>
+
+      <!-- Forgot password: step 1, ask for a code -->
+      <form id="reset-request-form" novalidate hidden>
+        <h2>Reset your password</h2>
+        <p class="hint">Enter the email you signed up with and we'll send you a 6-digit reset code.</p>
+        <label for="reset-email">Email</label>
+        <input id="reset-email" type="email" autocomplete="email" required />
+        <p class="field-error" data-for="reset-email"></p>
+        <button type="submit" class="primary" id="reset-request-submit">Send reset code</button>
+        <button type="button" class="link back-to-login">← Back to sign in</button>
+      </form>
+
+      <!-- Forgot password: step 2, set the new password -->
+      <form id="reset-confirm-form" novalidate hidden>
+        <h2>Choose a new password</h2>
+        <p class="hint" id="reset-sent-to"></p>
+        <div class="demo-code" id="demo-code" hidden></div>
+        <label for="reset-code">Reset code</label>
+        <input id="reset-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required />
+        <p class="field-error" data-for="reset-code"></p>
+        <label for="new-password">New password</label>
+        <div class="password-row">
+          <input id="new-password" type="password" autocomplete="new-password" minlength="8" required />
+          <button type="button" class="toggle" data-target="new-password" aria-label="Show password">Show</button>
+        </div>
+        <div class="strength" aria-hidden="true"><span id="strength-bar"></span></div>
+        <p class="field-error" data-for="new-password"></p>
+        <label for="confirm-password">Confirm new password</label>
+        <input id="confirm-password" type="password" autocomplete="new-password" required />
+        <p class="field-error" data-for="confirm-password"></p>
+        <button type="submit" class="primary" id="reset-confirm-submit">Reset password</button>
+        <button type="button" class="link" id="resend-link">Didn't get a code? Send a new one</button>
+        <button type="button" class="link back-to-login">← Back to sign in</button>
+      </form>
+
+      <p id="message" role="status"></p>
     </section>
   </main>
   <script src="/static/app.js"></script>

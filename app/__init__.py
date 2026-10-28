@@ -1,1 +1,1 @@
-"""Login service package."""
+"""Password Reset package."""
